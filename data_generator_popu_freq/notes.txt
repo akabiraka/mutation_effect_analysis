@@ -1,0 +1,22 @@
+
+Download ALFA validated human missense variants: July 1, 2023
+    Query: "homo sapiens"[Organism] AND "missense variant"[Function Class] AND "by alfa"[Validation Status].
+    From the top "Send to:" options, select File > Format=XML > Sort by=SNP_ID. Did not work, got broken after ~12 hours.
+    Used in house download script, it took ~2days.
+    Downloaded 6,866,032 SNPs in XML format. Downloaded filesize is ~15GB. 
+
+Parse downloaded XML data:
+
+ALFA population freq data
+    Download from: https://ftp.ncbi.nih.gov/snp/population_frequency/latest_release/
+    Filename: freq.vcf.gz
+    Last modified: 2020-11-24 12:17   
+    Filesize: 11G 
+    About ALFA can be found here: https://www.ncbi.nlm.nih.gov/snp/docs/gsr/alfa/
+
+MANE
+    About: https://www.ncbi.nlm.nih.gov/refseq/MANE/
+    Download from: https://ftp.ncbi.nlm.nih.gov/refseq/MANE/MANE_human/current/
+    Filename: MANE.GRCh38.v1.1.summary.txt.gz           
+    Last modified: 2023-04-20 11:07  
+    Filesize: 1.1M
