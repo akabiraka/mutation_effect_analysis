@@ -161,3 +161,7 @@ cython_debug/
 
 
 data/*
+logs/*
+models/dbnsfp/datasets/*
+models/dbnsfp/outputs_dbnsfp/*
+models/dbnsfp/outputs_postprocessed/*
