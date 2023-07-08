@@ -1,0 +1,60 @@
+
+------------------------------Installation of ESM------------------------------
+module load python/3.8.6-generic-x86_64 
+python -m venv hopper_esm_rives
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+pip install --upgrade pip
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+pip install fair-esm
+
+# other packages
+module load gnu10 #gnu10/10.3.0-ya
+module load openmpi # openmpi/4.1.2-4a
+pip install mpi4py
+
+
+------------------------------Run the test.py------------------------------
+salloc --partition=gpuq --qos=gpu --gres=gpu:A100.80gb:1 --mem=64G
+conda deactivate
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+
+# module load cuda/11.1.1-w7  # did not load while testing, but may need this later
+python models/esm_rives/test.py
+
+# time taken: 13.183202505111694 seconds
+
+
+-----------------------------------esm1_t6_43M_UR50S (on cpu)----------------------------
+# Sequentially: for 10 proteins, corresponding to 3000 variants, it took 13.183202505111694 seconds
+# This model can take long sequences, one seq was NP_001254479.2: 35,991 aa long.
+
+salloc --partition=normal --mem-per-cpu=8G --ntasks=101 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+mpirun -np 81 python -m mpi4py.futures models/esm_rives/popu_freq_pred.py
+# Multiprocessing: for 18261 proteins, corresponding to 4569881 variants, it took 862.6037464141846 seconds
+
+
+-----------------------------------esm1b_t33_650M_UR50S----------------------------------
+
+
+# Sequentially (on hopper node): for 10 proteins, 88 variants, Time taken: 13.016199350357056 seconds
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+python models/esm_rives/popu_freq_pred.py
+
+# Multiprocessing: for 10 proteins, 100 variants, Time taken: 101.60816383361816 seconds
+salloc --partition=normal --mem-per-cpu=32G --ntasks=11 
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+mpirun -np 5 python -m mpi4py.futures models/esm_rives/popu_freq_pred.py
+
+# Multiprocessing: for 15962 proteins, 95257 variants, Time taken: 9755.17731142044 seconds ~ 2.7 hours
+salloc --partition=normal --mem-per-cpu=32G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=32G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/esm_rives/pred_masked.py
