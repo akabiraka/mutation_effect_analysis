@@ -170,3 +170,5 @@ models/vespa_marquet/outputs/*
 models/rostlab_huggingface/outputs/*
 models/bioembeddings_dallago/outputs/*
 models/esm_rives/outputs/*
+models/proteinbert_brandes/cache/*
+models/proteinbert_brandes/outputs/*
