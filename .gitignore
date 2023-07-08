@@ -165,3 +165,5 @@ logs/*
 models/dbnsfp/datasets/*
 models/dbnsfp/outputs_dbnsfp/*
 models/dbnsfp/outputs_postprocessed/*
+models/vespa_marquet/cache/*
+models/vespa_marquet/outputs/*

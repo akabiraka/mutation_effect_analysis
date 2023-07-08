@@ -88,14 +88,18 @@ def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=No
 # get_patho_likelypatho_neutral_dbnsfp_dataset()
 
 def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    filepath = home_dir+f"models/aa_common/datasets_popu_freq/popu_freq_with_dbnsfp_sampled"
+    filepath = home_dir+f"data/datasets_popu_freq/popu_freq_with_dbnsfp_sampled"
     df = pd.read_csv(filepath+".tsv", sep="\t")
     seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
     print(df.columns)
     print(df.shape)
+    print("#-rsids:", df["snp_id"].unique().shape[0])
+    print("#-genes", df["gene_name"].unique().shape[0])
+    print("#-refseq-prots:", df["mane_refseq_prot"].unique().shape[0])
+    print("#-seqs:", len(seq_data))
+
     print(df["class"].value_counts())
-    print("#-unique prots: ", len(seq_data))
     return df, seq_data
 # get_popu_freq_dbnsfp_dataset()
 

@@ -1,0 +1,41 @@
+
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+https://github.com/Rostlab/VESPA 
+Predictions for 39 DMS in Supplementary file 3: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8716573/
+VESPAl Predictions for human proteome: https://zenodo.org/record/5905863#.Y9fsiRzMKMI filename: vespal_human_proteome.zip
+unzip vespal_human_proteome.zip -d destination/folder/
+
+python -m venv hopper_vespa_marquet
+source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet/bin/activate
+pip install vespa-effect
+
+vespa models/vespa_marquet/cache/test.fasta --prott5_weights_cache models/vespa_marquet/cache
+vespa_logodds models/vespa_marquet/cache/test.fasta --prott5_weights_cache models/vespa_marquet/cache -o models/vespa_marquet/patho_and_likelypatho/logodds.h5 --csv_dir models/vespa_marquet/patho_and_likelypatho/
+
+vespa_logodds models/vespa_marquet/cache/all_sequences.fasta --prott5_weights_cache models/vespa_marquet/cache -o models/vespa_marquet/logodds/logodds.h5 --csv_dir models/vespa_marquet/logodds/
+
+
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_vespa_marquet_from_source
+source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate
+pip install --upgrade pip
+
+pip install "vespa-effect @ git+https://github.com/Rostlab/VESPA.git"
+
+https://github.com/Rostlab/VESPA.git
+cd VESPA/
+pip install -e .
+
+# other packages
+module load gnu10 #gnu10/10.3.0-ya
+module load openmpi # openmpi/4.1.2-4a
+pip install mpi4py
+
+# 32G is fine but once had an error, so use 64G
+salloc --partition=contrib --mem-per-cpu=64G --ntasks=11
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/vespa_pred.py
