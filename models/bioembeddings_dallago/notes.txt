@@ -1,0 +1,48 @@
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_bioembeddings_dallago
+source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago/bin/activate
+pip install --upgrade pip
+
+pip install bio-embeddings[all] --no-cache-dir
+
+Note: This does not properly install pytorch (=">=1.8.0,<=1.10.0"). "bio_embeddings/bio_embeddings/embed/__init__.py" describes that it is build on CUDA 11.1, so manually install the following:
+pip install torch==1.9.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html       # this will install compatible torch with cuda 11.1
+
+
+
+
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_bioembeddings_dallago_from_source
+source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/bin/activate
+pip install --upgrade pip
+
+pip install -U "bio-embeddings[all] @ git+https://github.com/sacdallago/bio_embeddings.git"
+
+#Note: This does not properly install pytorch (=">=1.8.0,<=1.10.0"). "bio_embeddings/bio_embeddings/embed/__init__.py" describes that it is build on CUDA 11.1, so manually install the following:
+pip install torch==1.9.1+cu111 -f https://download.pytorch.org/whl/torch_stable.html       # this will install compatible torch with cuda 11.1
+
+# mpi installation
+module load gnu10 #gnu10/10.3.0-ya
+module load openmpi # openmpi/4.1.2-4a
+pip install mpi4py
+
+# 16G plus_rnn, bert, albert and xlnet
+# 32G prottrans_t5_bfd, 
+# 64G prottrans_t5_uniref50, prottrans_t5_xl_u50
+
+salloc --partition=normal --mem-per-cpu=16G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pred_masked.py
+
+# Multiprocessing-prottrans_bert_bfd: for 15962 proteins, 95324 variants, Time taken: ??? seconds ~ ??? mins
+# Multiprocessing-prottrans_albert_bfd: for 15962 proteins, 95324 variants, Time taken: 7835.752500295639 seconds ~ ??? mins
+# Multiprocessing-prottrans_xlnet_uniref100: for 15962 proteins, 95324 variants, Time taken: 7911.455941200256 seconds ~ ??? mins
+# Multiprocessing-prottrans_t5_bfd: for 15962 proteins, 95324 variants, Time taken: 36245.26994514465 seconds ~ ??? mins
+# Multiprocessing-prottrans_t5_uniref50: for 15962 proteins, 95324 variants, Time taken: 34463.274727106094 seconds ~ ??? mins
+# Multiprocessing-prottrans_t5_xl_u50: for 15962 proteins, 95324 variants, Time taken: 35054.415758132935 seconds ~ ??? mins
+# Multiprocessing-plus_rnn: for 15962 proteins, 95324 variants, Time taken: 553.9494614601135 seconds ~ ??? mins
+

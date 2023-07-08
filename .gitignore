@@ -168,3 +168,4 @@ models/dbnsfp/outputs_postprocessed/*
 models/vespa_marquet/cache/*
 models/vespa_marquet/outputs/*
 models/rostlab_huggingface/outputs/*
+models/bioembeddings_dallago/outputs/*
