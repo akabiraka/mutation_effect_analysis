@@ -1,0 +1,25 @@
+# editable transformer library installation for using Rostlab/prot_t5_xl_uniref50 and /Rostlab/prot_bert_bfd
+Follow this page: https://huggingface.co/docs/transformers/installation
+The following is for quick start.
+
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_transformers_editable
+source hopper_transformers_editable/bin/activate
+git clone https://github.com/huggingface/transformers.git
+
+cd transformers
+pip install -e .
+
+# to update
+cd ~/transformers/
+git pull
+
+
+# 64G prottrans_t5_xl_u50
+
+salloc --partition=contrib --mem-per-cpu=64G --ntasks=11 --time=0-10:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_transformers_editable/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/rostlab_huggingface/pred_masked.py

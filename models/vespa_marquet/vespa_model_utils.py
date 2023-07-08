@@ -105,8 +105,9 @@ def compute_predictions(protid, seq, mutations):
 
 
 def get_predictions(prot_acc_version, seq, mutations, variants_df, model_preds_out_dir):
-    prev_out_path = home_dir+f"{model_preds_out_dir}{prot_acc_version}.pkl"
-    new_out_path = home_dir+f"models/vespa_marquet/outputs/vespa/popu_freq/raw_predictions_new/{prot_acc_version}.pkl"
+    new_out_path = home_dir+f"{model_preds_out_dir}{prot_acc_version}.pkl"
+    prev_out_path = home_dir+f"models/vespa_marquet/outputs/vespa/popu_freq/raw_predictions_prev/{prot_acc_version}.pkl"
+
     if os.path.exists(new_out_path):
         print(f"..................loading vespa preds for {prot_acc_version}....................")
         predictions_dict = pickle_utils.load_pickle(new_out_path)
