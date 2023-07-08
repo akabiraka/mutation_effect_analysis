@@ -1,0 +1,43 @@
+
+### Installation
+    module load python/3.8.6-generic-x86_64
+    python -m venv hopper_sequnet_dunham
+    source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
+    pip install --upgrade pip
+
+    pip install git+https://github.com/allydunham/proteinnetpy
+
+    git clone https://github.com/allydunham/sequence_unet.git
+    cd sequence_unet/
+    pip install -e .
+
+### Test
+python 
+>>> from sequence_unet.predict import predict_sequence
+success
+
+### Run the module
+salloc --partition=normal --mem=32G
+source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
+
+### Caveats
+1. Change the line 47 in this file venvs/sequence_unet/sequence_unet/predict.py
+    47     one_hot = np.zeros((len(indeces), 20), dtype=np.int) ->  one_hot = np.zeros((len(indeces), 20), dtype=np.int32)
+
+
+# Sequential run
+For 10*32 proteins, 2917 variants, Time taken: 41.43040180206299 seconds
+
+# MPI
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_sequnet_dunham/bin/activate
+
+mpirun -np 9 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
+For 10*32 proteins, 2917 variants, Time taken: 28.22511315345764 seconds
+
+mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
+For 15962 proteins, 95211 (95324) variants, Time taken: 575.6858053207397 seconds ~ 9.5 mins
+
+mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/pred_nonmasked.py
