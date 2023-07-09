@@ -174,3 +174,4 @@ models/proteinbert_brandes/cache/*
 models/proteinbert_brandes/outputs/*
 models/sequnet_dunham/cache/*
 models/sequnet_dunham/outputs/*
+models/cpt1_jagota/*
