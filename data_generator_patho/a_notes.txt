@@ -1,0 +1,25 @@
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+Pathogenicity (pathogenic and likely pathogenic) analysis dataset curation:
+    
+    Downloaded the pathogenic and likely-pathogenic SNVs for humans from NCBI-dbSNP separately:
+        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig pathogenic"[Filter] AND ("2022/01/01"[Creation Date] : "2023/07/01"[Creation Date]) 
+        "homo sapiens"[Organism] AND "missense variant"[Molecular consequence] AND "clinsig likely path"[Filter] AND ("2022/01/01"[Creation Date] : "2023/07/01"[Creation Date]) 
+        Download by clicking the download option: format: tabular(text)
+
+
+    Map the SNPs with the corresponding canonical transcription protein products using gene2refseq (https://ftp.ncbi.nlm.nih.gov/gene/DATA/, gene2refseq.gz, 1.3G):
+        wget https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2refseq.gz # Last modified: 2023-07-09 22:21  size: 1.4G
+        1_gene2refseq_preprocessing.ipynb
+        2_clinvar_mapping_gene2refseq.ipynb
+
+
+    Run the following, which will essentially cleanup and merge patho and likely-patho set. Outputs will be saved at "models/aa_common/datasets_pathogenicity/".
+    SNVs_conversion_for_pathogenicity.ipynb
+
+dbnsfp data extraction
+    models/aa_common/dbnsfp/data_preprocess.ipynb (only patho section)
+    models/aa_common/dbnsfp/hopper.sh
+    models/aa_common/dbnsfp/outputs_postprocess_pathogenicity.ipynb
+
+sample_neutral_set.ipynb
