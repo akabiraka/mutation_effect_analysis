@@ -24,26 +24,30 @@ def get_protein_sequences(fasta_filepath, return_type=None):
 
 # ------------------------------the next 3 functions are for loading base 3 datasets-----------------------------
 def get_popu_freq_SNVs(home_dir=""):
-    print("\nLog: Loading data ...")
-    variants_df = pd.read_csv(home_dir+"data/temp_popufreq_dataset/cls_labeled_variants_short.tsv", sep="\t")
+    print("\nLog: Loading base-popu-freq data ...")
+    variants_df = pd.read_csv(home_dir+"data/datasets_popu_freq_temp/cls_labeled_variants_short.tsv", sep="\t")
+    
     print(variants_df.columns)
     print("total: ", variants_df.shape)
     print("#-unique_rsids:", variants_df["snp_id"].unique().shape[0])
     print("#-unique_genes:",variants_df["gene_name"].unique().shape[0])
-    print("#-unique_refseq_prots:",variants_df["mane_refseq_prot"].unique().shape[0])
+    print("#-unique_NP_ids:",variants_df["mane_refseq_prot"].unique().shape[0])
     print(variants_df["class"].value_counts())
 
     return variants_df
 # get_population_freq_SNVs()#force=True)
 
 def get_patho_and_likelypatho_SNVs(home_dir=""):
-    filepath = home_dir+f"models/aa_common/datasets_patho/patho_and_likelypatho.tsv"
-
-    variants_df = pd.read_csv(filepath, sep="\t")
-    variants_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
+    print("\nLog: Loading base-patho data ...")
+    variants_df = pd.read_csv(home_dir+f"data/datasets_patho/patho_and_likelypatho.tsv", sep="\t")
+    
     print(variants_df.columns)
-    print(variants_df["class"].value_counts())
     print("total: ", variants_df.shape)
+    print("#-unique_clinvarids:", variants_df["clinvar_id"].unique().shape[0])
+    print("#-unique_rsids:", variants_df["snp_id"].unique().shape[0])
+    print("#-unique_genes:",variants_df["gene_name"].unique().shape[0])
+    print("#-unique_NP_ids:",variants_df["prot_acc_version"].unique().shape[0])
+    print(variants_df["class"].value_counts())
     
     return variants_df
 # get_patho_and_likelypatho_SNVs()
