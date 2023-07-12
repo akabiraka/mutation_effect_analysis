@@ -7,10 +7,10 @@ import  pandas as pd
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.proteinbert_brandes.model_utils as model_utils
 
-task = "popu_freq" # pmd, popu_freq, patho
+task = "patho" # pmd, popu_freq, patho
 # variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
+variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 model_name = "proteinbert"
 model, tokenizer = model_utils.get_model_tokenizer(model_name)

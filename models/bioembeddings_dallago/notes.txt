@@ -37,6 +37,7 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_bioembeddings_dallago_from_source/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pred_masked.py
+mpirun -np 11 python -m mpi4py.futures models/bioembeddings_dallago/pred_nonmasked.py
 
 # Multiprocessing-prottrans_bert_bfd: for 15962 proteins, 95324 variants, Time taken: ??? seconds ~ ??? mins
 # Multiprocessing-prottrans_albert_bfd: for 15962 proteins, 95324 variants, Time taken: 7835.752500295639 seconds ~ ??? mins

@@ -80,14 +80,19 @@ def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
 # get_pmd_dbnsfp_dataset()
 
 def get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    filepath = home_dir+f"models/aa_common/datasets_patho/patho_likelypatho_neutral_dbnsfp"
+    filepath = home_dir+f"data/datasets_patho/patho_likelypatho_neutral_dbnsfp"
     df = pd.read_csv(filepath+".tsv", sep="\t")
     seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
     print(df.columns)
     print(df.shape)
+    print("#-unique_clinvarids:", df["clinvar_id"].unique().shape[0])
+    print("#-rsids:", df["snp_id"].unique().shape[0])
+    print("#-genes", df["gene_name"].unique().shape[0])
+    print("#-NP-ids:", df["prot_acc_version"].unique().shape[0])
+    print("#-seqs:", len(seq_data))
     print(df["class"].value_counts())
-    print("#-unique prots: ", len(seq_data))
+
     return df, seq_data
 # get_patho_likelypatho_neutral_dbnsfp_dataset()
 
@@ -100,10 +105,10 @@ def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
     print(df.shape)
     print("#-rsids:", df["snp_id"].unique().shape[0])
     print("#-genes", df["gene_name"].unique().shape[0])
-    print("#-refseq-prots:", df["mane_refseq_prot"].unique().shape[0])
+    print("#-NP-ids:", df["prot_acc_version"].unique().shape[0])
     print("#-seqs:", len(seq_data))
-
     print(df["class"].value_counts())
+
     return df, seq_data
 # get_popu_freq_dbnsfp_dataset()
 

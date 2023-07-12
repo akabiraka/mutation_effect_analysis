@@ -8,13 +8,13 @@ import  pandas as pd
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.bioembeddings_dallago.model_utils as model_utils
 
-task = "popu_freq" # pmd, popu_freq, patho
+task = "patho" # pmd, popu_freq, patho
 # variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
+variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 
-model_name = "prottrans_albert_bfd"  #tested for: prottrans_bert_bfd, prottrans_albert_bfd
+model_name = "prottrans_bert_bfd"  #tested for: prottrans_bert_bfd, prottrans_albert_bfd
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name)
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(model_name, task)
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     chunk_size = 1 # 32 if torch.cuda.is_available() else 1
     data_chunks = [data[x:x+chunk_size] for x in range(0, len(data), chunk_size)]
-    # data_chunks = data_chunks[:10] 
+    # data_chunks = data_chunks[:5] 
     print(f"#-of chunks: {len(data_chunks)}, 1st chunk size: {len(data_chunks[0])}")
 
     pred_dfs = []
