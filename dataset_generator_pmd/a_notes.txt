@@ -1,0 +1,18 @@
+source /projects/ashehu/akabir4/venvs/hopper_variant_effect_analysis_mine/bin/activate
+
+PMD_dbnsfp.ipynb is what I got from Dr. Praba. This contains scores from dbnsfp.
+
+Here, the raw PMD data is mapped with rs-ids such that we can extract chromosomal variants to compare with.
+PMD_merging_with_rsids.ipynb 
+
+Then, we merge the above two set to better cover the PMD data with dbNSFP.
+PMD_merging_dbnsfp_and_rsids.ipynb
+
+
+We do not use SNVs_conversion_for_PMD.ipynb anymore.
+
+dbNSFP extraction and postprocessing:
+    models/aa_common/data_preprocess.ipynb (only pmd section).
+    models/dbnsfp/hopper.sh 
+    models/aa_common/outputs_postprocess_pmd.ipynb
+

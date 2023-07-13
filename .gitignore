@@ -175,3 +175,6 @@ models/proteinbert_brandes/outputs/*
 models/sequnet_dunham/cache/*
 models/sequnet_dunham/outputs/*
 models/cpt1_jagota/*
+models/jax_unirep/outputs/*
+models/tape_rao/cache/*
+models/tape_rao/outputs/*

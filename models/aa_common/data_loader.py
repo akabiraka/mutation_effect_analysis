@@ -55,7 +55,7 @@ def get_patho_and_likelypatho_SNVs(home_dir=""):
 
 def get_pmd_dataset(home_dir=""):
     print("\nLog: Loading Protein Mutation Dataset (PMD) ...")
-    pmd_df = pd.read_csv(home_dir+"models/aa_common/datasets_pmd/pmd.tsv", sep="\t") # PMD: protein mutation dataset
+    pmd_df = pd.read_csv(home_dir+"data/datasets_pmd/pmd.tsv", sep="\t") # PMD: protein mutation dataset
     pmd_df.drop_duplicates(keep="first", inplace=True, ignore_index=True)
     
     print(pmd_df.columns)
@@ -68,7 +68,7 @@ def get_pmd_dataset(home_dir=""):
 
 # ----------------------------------------the following 3 data-loader we are going to use for model running------------------------
 def get_pmd_dbnsfp_dataset(home_dir="", seq_return_type=None):
-    filepath = home_dir+f"models/aa_common/datasets_pmd/pmd_dbnsfp"
+    filepath = home_dir+f"data/datasets_pmd/pmd_dbnsfp"
     df = pd.read_csv(filepath+".tsv", sep="\t")
     seq_data = get_protein_sequences(fasta_filepath=filepath+".fasta", return_type=seq_return_type)
 
@@ -113,9 +113,18 @@ def get_popu_freq_dbnsfp_dataset(home_dir="", seq_return_type=None):
 # get_popu_freq_dbnsfp_dataset()
 
 # ---------------------------- loading merged and result analysis things------------------------------
-def get_merged_scores_df(task, home_dir=""):
-    result_df = pd.read_csv(home_dir+f"models/aa_common/merged_predictions/{task}.tsv", sep="\t")
+def get_merged_scores_raw_df(task, home_dir=""):
+    result_df = pd.read_csv(home_dir+f"data/merged_predictions_raw/{task}.tsv", sep="\t")
     print(result_df.columns)
     print(result_df.shape)
     print(result_df["class"].value_counts())
     return result_df
+# get_merged_scores_raw_df("pmd")
+
+def get_merged_scores_unidirectional_df(task, home_dir=""):
+    result_df = pd.read_csv(home_dir+f"data/merged_predictions_unidirectional/{task}.tsv", sep="\t")
+    print(result_df.columns)
+    print(result_df.shape)
+    print(result_df["class"].value_counts())
+    return result_df
+# get_merged_scores_unidirectional_df("pmd")

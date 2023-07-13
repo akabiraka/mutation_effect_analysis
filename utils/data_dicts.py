@@ -1,7 +1,12 @@
 
 
+all_method_names = ['sift', 'polyphen2_HVAR', 'metarnn', 'revel', 'mvp', 'cadd_raw', 'integrated_fitCons', 'phyloP17way_primate', 'phastCons17way_primate', 'bStatistic', 
+                'esm1b_t33_650M_UR50S', 'esm1v_t33_650M_UR90S', 'esm2_t33_650M_UR50D', 
+                'prottrans_bert_bfd', 'prottrans_albert_bfd', 'plus_rnn', 'prottrans_t5_xl_u50', 
+                'vespa', 'vespal', 
+                'proteinbert', 'sequnet', 'protbert', 'unirep']
 
-method_names = ['sift', 'polyphen2_HVAR', 'revel', 'cadd_raw', 'phyloP17way_primate', 'phastCons17way_primate', 
+selected_method_names = ['sift', 'polyphen2_HVAR', 'revel', 'cadd_raw', 'phyloP17way_primate', 'phastCons17way_primate', 
                 'metarnn',  'mvp', 'sequnet', 'vespa',
                 'esm1b_t33_650M_UR50S', 'esm1v_t33_650M_UR90S', 'esm2_t33_650M_UR50D', 
                 'prottrans_bert_bfd', 'prottrans_t5_xl_u50', 'proteinbert', 'protbert', 'unirep']

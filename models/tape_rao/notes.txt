@@ -1,0 +1,70 @@
+
+------------------------------Installation of TAPE (pytorch)------------------------------
+module load python/3.8.6-generic-x86_64
+python -m venv hopper_tape_rao
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao/bin/activate
+pip install --upgrade pip
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+pip install tape_proteins
+
+# other packages
+module load gnu10 #gnu10/10.3.0-ya
+module load openmpi # openmpi/4.1.2-4a
+pip install mpi4py
+
+
+# Sequentially (on hopper node): for 10 proteins, 88 variants, Time taken: 19.363332748413086 seconds
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao/bin/activate
+python models/esm_rives/popu_freq_pred.py
+
+# Multiprocessing: for 10 proteins, 110 variants, Time taken: 13.843204975128174 seconds
+salloc --partition=normal --mem-per-cpu=16G --ntasks=11
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao/bin/activate
+mpirun -np 9 python -m mpi4py.futures models/tape_rao/popu_freq_pred.py
+
+# Multiprocessing: for 15962 proteins, 95246 variants, Time taken: 1686.2544784545898 seconds ~ 28 mins
+salloc --partition=normal --mem-per-cpu=16G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_tape_rao_1/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/tape_rao/pred_masked.py (needed to run it on the login node, getting error on the other nodes, not sure what!!!)
+mpirun -np 11 python -m mpi4py.futures models/tape_rao/pred_embedding.py
+
+
+------------------------------Installation of TAPE (TF)------------------------------
+module load python/3.6.7 (hopper does not have this python version)
+python -m venv argo_tape_tf_rao
+source /projects/ashehu/akabir4/venvs/argo_tape_tf_rao/bin/activate
+pip install --upgrade pip
+
+git clone https://github.com/songlab-cal/tape-neurips2019.git
+cd tape-neurips2019
+pip install -e . --no-cache-dir
+
+Note: Running as it gives following error even though GitPython is already installed.
+	ValueError: Cannot import git (pip install GitPython).
+	Either GitPython or the git executable is missing.
+	You can disable git with:
+		sacred.Experiment(..., save_git_info=False)
+	
+	Then change in the following files:
+		/home/akabir4/tape-neurips2019/tape/models/BidirectionalLSTM.py
+		/home/akabir4/tape-neurips2019/tape/models/BeplerModel.py
+		/home/akabir4/tape-neurips2019/tape/models/UniRepModel.py
+		/home/akabir4/tape-neurips2019/tape/models/Resnet.py
+		/home/akabir4/tape-neurips2019/tape/models/Transformer.py
+
+    Ingredient('model_name') >>>  Ingredient('model_name', save_git_info=False) # model_name: [lstm, belper, unirep, resnet, transformer]
+
+Even that is not enough, h5py need to be downgraded following this discussion (https://stackoverflow.com/questions/53740577/does-any-one-got-attributeerror-str-object-has-no-attribute-decode-whi)
+	h5py 3.1.0 >>> pip install 'h5py==2.10.0' --force-reinstall
+
+
+salloc --partition=gpuq --gres=gpu:1 --mem=32G
+source /projects/ashehu/akabir4/venvs/argo_tape_tf_rao/bin/activate
+module load cuda/10.0
+tape with model=transformer tasks=masked_language_modeling load_task_from=pretrained_models/transformer_weights.h5

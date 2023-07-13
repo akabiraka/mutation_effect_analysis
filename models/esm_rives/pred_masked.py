@@ -7,10 +7,10 @@ import  pandas as pd
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.esm_rives.model_utils as model_utils
 
-task = "patho" # pmd, popu_freq, patho
-# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "pmd" # pmd, popu_freq, patho
+variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 # variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 model_name="esm2_t33_650M_UR50D" # esm1b_t33_650M_UR50S, esm1v_t33_650M_UR90S, esm2_t33_650M_UR50D
 model, alphabet, batch_converter = model_utils.get_model_tokenizer(model_name)

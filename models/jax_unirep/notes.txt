@@ -1,0 +1,24 @@
+------------------------------Installation of jax-unirep independently------------------------------
+module load python/3.8.6-generic-x86_64 
+python -m venv hopper_jax_unirep
+source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
+pip install --upgrade pip
+pip install jax-unirep
+
+Api guide: https://elarkk.github.io/jax-unirep/
+
+------------------------------A example run for jax_unirep------------------------------
+from jax_unirep import get_reps
+sequence = "ASDFGHJKL"
+h_avg, h_final, c_final = get_reps(sequence)
+print(h_avg.shape)
+
+
+
+salloc --partition=normal --mem-per-cpu=16G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=16G --ntasks=11 --time=0-02:00
+module load gnu10
+module load openmpi
+source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
+
+mpirun -np 11 python -m mpi4py.futures models/jax_unirep/pred_embeddings.py

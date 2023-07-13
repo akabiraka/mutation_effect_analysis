@@ -7,10 +7,10 @@ import  pandas as pd
 from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_dbnsfp_dataset, get_patho_likelypatho_neutral_dbnsfp_dataset
 import models.bioembeddings_dallago.model_utils as model_utils
 
-task = "patho" # pmd, popu_freq, patho
-# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "pmd" # pmd, popu_freq, patho
+variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 # variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 
 model_name = "plus_rnn"  #tested for: plus_rnn

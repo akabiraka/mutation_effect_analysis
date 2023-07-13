@@ -8,10 +8,10 @@ from models.aa_common.data_loader import get_pmd_dbnsfp_dataset, get_popu_freq_d
 from models.vespa_marquet.vespa_model_utils import create_output_directories, get_predictions
 
 model_name = "vespa"
-task = "patho" # pmd, popu_freq, patho
-# variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
+task = "pmd" # pmd, popu_freq, patho
+variants_df, protid_seq_dict = get_pmd_dbnsfp_dataset(home_dir)
 # variants_df, protid_seq_dict = get_popu_freq_dbnsfp_dataset(home_dir)
-variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
+# variants_df, protid_seq_dict = get_patho_likelypatho_neutral_dbnsfp_dataset(home_dir)
 
 def compute_mutation(row):
     return row["wt_aa_1letter"]+str(row["1indexed_prot_mt_pos"])+row["mt_aa_1letter"]
@@ -27,7 +27,7 @@ def execute(protids_list):
         seq = protid_seq_dict[protid]
         mutations = variants_df[variants_df["prot_acc_version"]==protid]["mut_real"].unique().tolist()
         # mutations = ['T164I', 'V297M', 'I201V', 'I201A']
-        preds_related_to_aprot = get_predictions(protid, seq, mutations, variants_df, model_preds_out_dir)
+        preds_related_to_aprot = get_predictions(protid, seq, mutations, variants_df, model_preds_out_dir, task)
         preds += preds_related_to_aprot
     preds_df = pd.DataFrame(preds)   
     return preds_df
