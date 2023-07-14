@@ -15,17 +15,15 @@ def get_auc_roc_score(non_nan_result_df:pd.DataFrame, verbose=False):
     if verbose: print(f"\tAUC-ROC: {auc_roc_score:.3f}")
     return auc_roc_score, larger_means_positive_class
 
-def get_auc_pr_score(non_nan_result_df:pd.DataFrame):
+def get_auc_pr_score(non_nan_result_df:pd.DataFrame, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     precision, recall, thresholds = sklearn_metrics.precision_recall_curve(df["class_numeric"], df["pred"], pos_label=1)
     auc_pr_score = sklearn_metrics.auc(recall, precision)
 
-    # if auc_pr_score < 0.5: 
-    #     auc_pr_score = 1 - auc_pr_score
-    print(f"\tAUC-PR: {auc_pr_score:.3f}")
+    if verbose: print(f"\tAUC-PR: {auc_pr_score:.3f}")
     return auc_pr_score, precision, recall, thresholds
 
-def get_f1max_and_th(precisions, recalls, thresholds):
+def get_f1max_and_th(precisions, recalls, thresholds, verbose=False):
     zero_indices = [i for i in range(precisions.shape[0]) if precisions[i]==0. and recalls[i]==0.]
     
     # if precision and recall both are 0, f1=nan
@@ -37,10 +35,10 @@ def get_f1max_and_th(precisions, recalls, thresholds):
     f1_scores = (2*recalls*precisions)/(recalls+precisions) 
     th_max = thresholds[np.argmax(f1_scores)]
     f1_max = np.max(f1_scores)
-    print(f"\tBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
+    if verbose: print(f"\tBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
     return f1_max, th_max, precisions, recalls, thresholds
 
-def get_f1max_and_th_(non_nan_result_df:pd.DataFrame):
+def get_f1max_and_th_(non_nan_result_df:pd.DataFrame, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     f1_scores, precisions, recalls = [], [], []
     thresholds = np.arange(0, 1, .01)
@@ -58,115 +56,75 @@ def get_f1max_and_th_(non_nan_result_df:pd.DataFrame):
 
     f1_max = np.max(f1_scores)
     th_max = thresholds[np.argmax(f1_scores)]
-    print(f"\tcBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
+    if verbose: print(f"\tcBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
     return f1_max, th_max, precisions, recalls, thresholds
 
+def get_precision_score(non_nan_result_df:pd.DataFrame, th, verbose=False):
+    df = non_nan_result_df.copy(deep=True)
+    df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
+    df.loc[df["pred"]<th, "class_numeric_pred"] = 0
+    precision_score = sklearn_metrics.precision_score(df["class_numeric"], df["class_numeric_pred"], zero_division=0)
     
-# def get_f1max_and_th_(precision, recall, thresholds):
-#     numerator = 2 * recall * precision
-#     denom = recall + precision
-#     f1_scores = np.divide(numerator, denom, out=np.zeros_like(denom), where=(denom!=0))
-#     f1_max = np.max(f1_scores)
-#     th_max = thresholds[np.argmax(f1_scores)]
-#     print(f"\tBest F1-Score: {f1_max:.3f} at threshold: {th_max:.3f}")
-#     return f1_max, th_max
+    if verbose: print(f"\tPrecision score: {precision_score:.3f} at threshold: {th:.3f}")
+    return precision_score
 
-def get_precision_score(non_nan_result_df:pd.DataFrame, th):
+def get_recall_score(non_nan_result_df:pd.DataFrame, th, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
     df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    score = sklearn_metrics.precision_score(df["class_numeric"], df["class_numeric_pred"], zero_division=0)
-    
-    # df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    # df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    # score_reverse = sklearn_metrics.precision_score(df["class_numeric"], df["class_numeric_pred"], zero_division=0)
-    
-    # precision = max(score, score_reverse)
-    precision = score
-    print(f"\tPrecision score: {precision:.3f} at threshold: {th:.3f}")
-    return precision
+    recall_score = sklearn_metrics.recall_score(df["class_numeric"], df["class_numeric_pred"])
+   
+    if verbose: print(f"\tRecall score: {recall_score:.3f} at threshold: {th:.3f}")
+    return recall_score
 
-def get_recall_score(non_nan_result_df:pd.DataFrame, th):
+def get_accuracy_score(non_nan_result_df:pd.DataFrame, th, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
     df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    score = sklearn_metrics.recall_score(df["class_numeric"], df["class_numeric_pred"])
+    accuracy_score = sklearn_metrics.accuracy_score(df["class_numeric"], df["class_numeric_pred"])
     
-    # df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    # df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    # score_reverse = sklearn_metrics.recall_score(df["class_numeric"], df["class_numeric_pred"])
-    
-    # recall = max(score, score_reverse)
-    recall = score
-    print(f"\tRecall score: {recall:.3f} at threshold: {th:.3f}")
-    return recall
+    if verbose: print(f"\tAccuracy score: {accuracy_score:.3f} at threshold: {th:.3f}")
+    return accuracy_score
 
-def get_accuracy_score(non_nan_result_df:pd.DataFrame, th):
+def get_matthews_corrcoef(non_nan_result_df:pd.DataFrame, th, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
     df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    score = sklearn_metrics.accuracy_score(df["class_numeric"], df["class_numeric_pred"])
+    mcc_score = sklearn_metrics.matthews_corrcoef(df["class_numeric"], df["class_numeric_pred"])
     
-    # df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    # df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    # score_reverse = sklearn_metrics.accuracy_score(df["class_numeric"], df["class_numeric_pred"])
+    if verbose: print(f"\tMCC score: {mcc_score:.3f} at threshold: {th:.3f}")
+    return mcc_score
     
-    # accuracy = max(score, score_reverse)
-    accuracy = score
-    print(f"\tAccuracy score: {accuracy:.3f} at threshold: {th:.3f}")
-    return accuracy
-
-def get_matthews_corrcoef(non_nan_result_df:pd.DataFrame, th):
+def get_balanced_accuracy_score(non_nan_result_df:pd.DataFrame, th, verbose=False):
     df = non_nan_result_df.copy(deep=True)
     df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
     df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    score = sklearn_metrics.matthews_corrcoef(df["class_numeric"], df["class_numeric_pred"])
+    balanced_accuracy_score = sklearn_metrics.balanced_accuracy_score(df["class_numeric"], df["class_numeric_pred"])
     
-    # df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    # df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    # score_reverse = sklearn_metrics.matthews_corrcoef(df["class_numeric"], df["class_numeric_pred"])
-    
-    # mcc = max(score, score_reverse)
-    mcc = score
-    print(f"\tMCC score: {mcc:.3f} at threshold: {th:.3f}")
-    return mcc
-    
-def get_balanced_accuracy_score(non_nan_result_df:pd.DataFrame, th):
-    df = non_nan_result_df.copy(deep=True)
-    df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    score = sklearn_metrics.balanced_accuracy_score(df["class_numeric"], df["class_numeric_pred"])
-    
-    # df.loc[df["pred"]>=th, "class_numeric_pred"] = 1
-    # df.loc[df["pred"]<th, "class_numeric_pred"] = 0
-    # score_reverse = sklearn_metrics.balanced_accuracy_score(df["class_numeric"], df["class_numeric_pred"])
-    
-    # balanced_accuracy = max(score, score_reverse)
-    balanced_accuracy = score
-    print(f"\tBalanced accuracy score: {balanced_accuracy:.3f} at threshold: {th:.3f}")
-    return balanced_accuracy
+    if verbose: print(f"\tBalanced accuracy score: {balanced_accuracy_score:.3f} at threshold: {th:.3f}")
+    return balanced_accuracy_score
 
 from scipy.stats import ks_2samp
-def get_KS_test_score(df:pd.DataFrame):
+def get_KS_test_score(df:pd.DataFrame, verbose=False):
     pos_cls_preds = df[df["class_numeric"]==1]["pred"]
     neg_cls_preds = df[df["class_numeric"]==0]["pred"]
     
     res = ks_2samp(pos_cls_preds, neg_cls_preds)
-    print(f"\tKS-test score. statistic: {res.statistic:.3f}, p-value: {res.pvalue:.3f}")
+    if verbose: print(f"\tKS-test score. statistic: {res.statistic:.3f}, p-value: {res.pvalue:.3f}")
     return res.statistic, res.pvalue
 
 
 # ------------------------ performance computation helper functions ------------------------------
 # by default, we consider larger means positive class (here Effect/Knock-out), but the following models have specific opposite meaning
-from utils.data_dicts import methods_smaller_means_damaging_from_paper
+
 metrics = ["AUC-ROC", "AUC-PR", "F1-max", "Th-max", "Precision", "Recall", "Accuracy", "Balanced-accuracy", "MCC"]
 
 def sample_positive_and_negative_data_points(df, method_name, positive_cls, negative_cls, n_samples=None):
     df = df[(df["class"]==positive_cls) | (df["class"]==negative_cls)].copy()
     # df = df[~pd.isna(df[method_name])]  # taking only non-NAN values
 
-    median = df[method_name].median()
-    df.loc[pd.isna(df[method_name]), method_name] = median # filling with median in the missing prediction score location
+    # median = df[method_name].median()
+    # df.loc[pd.isna(df[method_name]), method_name] = median # filling with median in the missing prediction score location
 
     positive_cls_df = df[df["class"]==positive_cls].copy()
     negative_cls_df = df[df["class"]==negative_cls].copy()
@@ -180,41 +138,52 @@ def sample_positive_and_negative_data_points(df, method_name, positive_cls, nega
     sampled_df = pd.concat([positive_cls_df, negative_cls_df])
     return sampled_df
 
-def calibrate_prediction_scores_direction(df, method_name):
-    if method_name in methods_smaller_means_damaging_from_paper:
-        df['pred'] = df['pred'].multiply(-1)
+# from utils.data_dicts import methods_smaller_means_damaging_from_paper
+# def calibrate_prediction_scores_direction(df, method_name):
+#     if method_name in methods_smaller_means_damaging_from_paper:
+#         df['pred'] = df['pred'].multiply(-1)
     
-    auc_roc_score, larger_means_positive_class = get_auc_roc_score(df)
-    if not larger_means_positive_class:
-        df['pred'] = df['pred'].multiply(-1)
-    return df, auc_roc_score
+#     auc_roc_score, larger_means_positive_class = get_auc_roc_score(df)
+#     if not larger_means_positive_class:
+#         df['pred'] = df['pred'].multiply(-1)
+#     return df, auc_roc_score
 
 
 def get_pathogenic_analysis_threshold(method_name, home_dir=""):
-    patho_performance_metrics_df = pd.read_csv(home_dir+f"models/aa_common/performance_analysis/patho_Pathogenic_vs_Neutral.tsv", sep="\t")
+    patho_performance_metrics_df = pd.read_csv(home_dir+f"data/performance_analysis/patho_Pathogenic_vs_Neutral.tsv", sep="\t")
     patho_th_max = patho_performance_metrics_df[patho_performance_metrics_df["Models\\Metrics"]==method_name]["Th-max"].values[1]
     patho_th_max = patho_th_max.split('(')[0]
     patho_th_max = float(patho_th_max)
-    print(f"\tComputed th from pathogenic-analysis: {patho_th_max}")
+    # print(f"\tComputed th from pathogenic-analysis: {patho_th_max}")
     return patho_th_max
 # print(get_pathogenic_analysis_threshold("phastCons17way_primate"))
 
 def compute_performance_metrics(df, method_name, positive_cls, negative_cls, n_runs=10, n_samples=None, home_dir=""):
     print(method_name)
+    
+    if method_name!="random_classifier":
+        median = df[method_name].median()
+        df.loc[pd.isna(df[method_name]), method_name] = median # filling with median in the missing prediction score location
+
     metric_scores = []
     for i in range(n_runs):
         if method_name=="random_classifier": df[method_name] = [random.uniform(0, 1) for i in range(df.shape[0])]
 
         sampled_df = sample_positive_and_negative_data_points(df, method_name, positive_cls, negative_cls, n_samples)
-        sampled_df["pred"]=(sampled_df[method_name]-sampled_df[method_name].min())/(sampled_df[method_name].max()-sampled_df[method_name].min()) # scaling prediction scores between [0, 1]
+        sampled_df["pred"] = sampled_df[method_name].copy()
+
+        # scaling between [0,1] has been done while making unidirectional
+        # sampled_df["pred"]=(sampled_df[method_name]-sampled_df[method_name].min())/(sampled_df[method_name].max()-sampled_df[method_name].min()) # scaling prediction scores between [0, 1]
         
         if method_name in ['phyloP17way_primate', 'phastCons17way_primate']:
             th_max = 0.5
             sampled_df.loc[sampled_df["pred"]>=th_max, "pred"] = 1
             sampled_df.loc[sampled_df["pred"]<th_max, "pred"] = 0
 
-        sampled_df, auc_roc_score =  calibrate_prediction_scores_direction(sampled_df, method_name)
+        # unidirectional process already did the calibration
+        # sampled_df, auc_roc_score =  calibrate_prediction_scores_direction(sampled_df, method_name)
         
+        auc_roc_score, _ = get_auc_roc_score(sampled_df)
         # ks_statistic, ks_pvalue = get_KS_test_score(sampled_df)
         auc_pr_score, precisions, recalls, thresholds = get_auc_pr_score(sampled_df)
         f1_max, th_max, precisions, recalls, thresholds = get_f1max_and_th(precisions, recalls, thresholds)
@@ -229,7 +198,7 @@ def compute_performance_metrics(df, method_name, positive_cls, negative_cls, n_r
         mcc = get_matthews_corrcoef(sampled_df, th_max)
         
         metric_scores.append([auc_roc_score, auc_pr_score, f1_max, th_max, precision, recall, accuracy, balanced_accuracy, mcc])
-        print()
+        # print()
         # if i==0: break
     return metric_scores
 
