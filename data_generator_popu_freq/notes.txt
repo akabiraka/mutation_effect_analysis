@@ -10,6 +10,7 @@ Parse downloaded XML data:
 ALFA population freq data
     Download from: https://ftp.ncbi.nih.gov/snp/population_frequency/latest_release/
     Filename: freq.vcf.gz
+    build_id: 20201027095038
     Last modified: 2020-11-24 12:17   
     Filesize: 11G 
     About ALFA can be found here: https://www.ncbi.nlm.nih.gov/snp/docs/gsr/alfa/
