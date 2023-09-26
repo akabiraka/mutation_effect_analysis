@@ -13,11 +13,14 @@ from torch.utils.data import DataLoader
 
 from bio_embeddings.embed import EmbedderInterface
 
+
 class PLUSRNNTokenizer(Protein):
     def __init__(self):
         super(PLUSRNNTokenizer, self).__init__()
-        
-    def convert_tokens_to_ids(self, tokens: Union[str, List[str]]) -> Union[int, List[int]]:
+
+    def convert_tokens_to_ids(
+        self, tokens: Union[str, List[str]]
+    ) -> Union[int, List[int]]:
         """
         Converts a token string (or a sequence of tokens) in a single integer id (or a sequence of ids), using the
         vocabulary.
@@ -38,8 +41,8 @@ class PLUSRNNTokenizer(Protein):
         for token in tokens:
             ids.append(self.encode(token.encode().upper()))
         return ids
-    
-    
+
+
 class PLUSRNNLM(EmbedderInterface):
     """PLUS RNN LM
 
@@ -54,7 +57,7 @@ class PLUSRNNLM(EmbedderInterface):
 
     necessary_files = ["model_file"]
 
-    _tokenizer: PLUSRNNTokenizer # Protein
+    _tokenizer: PLUSRNNTokenizer  # Protein
     _model: PLUS_RNN
     _model_cfg: ModelConfig
     _run_cfg: RunConfig
@@ -65,7 +68,7 @@ class PLUSRNNLM(EmbedderInterface):
         set_seeds(2020)
 
         # We inlined the config json files since they aren't shipped with the package
-        self._tokenizer = PLUSRNNTokenizer() #Protein()
+        self._tokenizer = PLUSRNNTokenizer()  # Protein()
         self._model_cfg = ModelConfig(input_dim=len(self._tokenizer))
         self._model_cfg.model_type = "RNN"
         self._model_cfg.rnn_type = "B"
@@ -107,21 +110,21 @@ class PLUSRNNLM(EmbedderInterface):
         embeddings = trainer.tasks_dict["results_eval"][0]["embeddings"]
         # 1 is d_h with 1024 dimensions
         for i in range(len(embeddings[0])):
-            yield embeddings[1][i]#.numpy()
+            yield embeddings[1][i]  # .numpy()
 
         trainer.reset()
 
     def embed(self, sequence: str) -> ndarray:
         [embedding] = self.embed_batch([sequence])
         embedding = embedding.unsqueeze(0)
-        b, n, d = embedding.size() # batch_size, seq_len, dimension (1, seq_len, 1024)
-        embedding = self._model.decoder(embedding.contiguous().view(-1, d)).view(b, n, -1)
+        b, n, d = embedding.size()  # batch_size, seq_len, dimension (1, seq_len, 1024)
+        embedding = self._model.decoder(embedding.contiguous().view(-1, d)).view(
+            b, n, -1
+        )
         logits = F.log_softmax(embedding, dim=2)
-        return logits.squeeze_().detach().numpy() # seq_len, 1024 
+        return logits.squeeze_().detach().numpy()  # seq_len, 21
         # return embedding
 
     @staticmethod
     def reduce_per_protein(embedding: ndarray) -> ndarray:
         return embedding.mean(axis=0)
-
-
