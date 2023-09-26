@@ -58,3 +58,4 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_esm_rives/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/esm_rives/pred_masked.py
+mpirun -np 11 python -m mpi4py.futures models/esm_rives/pred_dms.py
