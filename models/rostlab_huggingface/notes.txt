@@ -23,3 +23,4 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_transformers_editable/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/rostlab_huggingface/pred_masked.py
+mpirun -np 11 python -m mpi4py.futures models/rostlab_huggingface/pred_dms.py
