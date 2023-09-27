@@ -33,6 +33,7 @@ source /projects/ashehu/akabir4/venvs/hopper_tape_rao_1/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/tape_rao/pred_masked.py (needed to run it on the login node, getting error on the other nodes, not sure what!!!)
 mpirun -np 11 python -m mpi4py.futures models/tape_rao/pred_embedding.py
+mpirun -np 11 python -m mpi4py.futures models/tape_rao/pred_dms.py # had not issues to run on different nodes
 
 
 ------------------------------Installation of TAPE (TF)------------------------------

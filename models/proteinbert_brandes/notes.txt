@@ -13,3 +13,4 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_proteinbert_tf_brandes/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/proteinbert_brandes/pred_nonmasked.py
+python models/proteinbert_brandes/pred_dms.py

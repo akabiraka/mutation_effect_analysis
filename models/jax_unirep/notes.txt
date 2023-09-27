@@ -22,3 +22,4 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_jax_unirep/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/jax_unirep/pred_embeddings.py
+mpirun -np 11 python -m mpi4py.futures models/jax_unirep/pred_dms.py
