@@ -41,3 +41,4 @@ mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/popu_freq_pred.py
 For 15962 proteins, 95211 (95324) variants, Time taken: 575.6858053207397 seconds ~ 9.5 mins
 
 mpirun -np 11 python -m mpi4py.futures models/sequnet_dunham/pred_nonmasked.py
+python models/sequnet_dunham/pred_dms.py
