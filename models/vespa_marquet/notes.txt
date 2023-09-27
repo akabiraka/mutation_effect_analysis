@@ -33,9 +33,10 @@ module load openmpi # openmpi/4.1.2-4a
 pip install mpi4py
 
 # 32G is fine but once had an error, so use 64G
-salloc --partition=contrib --mem-per-cpu=64G --ntasks=11
+salloc --partition=contrib --mem-per-cpu=64G --ntasks=11 --time=0-02:00
 module load gnu10
 module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/vespa_pred.py
+mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/vespa_dms.py
