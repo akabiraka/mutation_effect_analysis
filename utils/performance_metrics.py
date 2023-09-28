@@ -150,7 +150,7 @@ def sample_positive_and_negative_data_points(df, method_name, positive_cls, nega
 
 
 def get_pathogenic_analysis_threshold(method_name, home_dir=""):
-    patho_performance_metrics_df = pd.read_csv(home_dir+f"data/performance_analysis/patho_Pathogenic_vs_Neutral.tsv", sep="\t")
+    patho_performance_metrics_df = pd.read_csv(home_dir+f"data/performance_analysis/patho_Pathogenic_vs_Neutral.tsv", sep="\t") # performance_analysis, performance_analysis_alphamissense
     patho_th_max = patho_performance_metrics_df[patho_performance_metrics_df["Models\\Metrics"]==method_name]["Th-max"].values[1]
     patho_th_max = patho_th_max.split('(')[0]
     patho_th_max = float(patho_th_max)
