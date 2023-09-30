@@ -39,4 +39,4 @@ module load openmpi
 source /projects/ashehu/akabir4/venvs/hopper_vespa_marquet_from_source/bin/activate
 
 mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/vespa_pred.py
-mpirun -np 11 python -m mpi4py.futures models/vespa_marquet/vespa_dms.py
+python models/vespa_marquet/vespa_dms.py

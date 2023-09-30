@@ -9,7 +9,7 @@ import pandas as pd
 
 import models.bioembeddings_dallago.model_utils as model_utils
 
-dms_filename = "PTEN_HUMAN_Matreyek_2021"
+dms_filename = "TPMT_HUMAN_Matreyek_2018" # "PTEN_HUMAN_Matreyek_2021"
 protid = dms_filename
 
 variants_df = pd.read_csv(f"data/dms/ProteinGym_substitutions/{protid}.csv", sep=",")
@@ -38,7 +38,7 @@ seq = (
 # loading model and tokenizer
 task = "dms"
 model_name = (
-    "prottrans_bert_bfd"  # tested for: prottrans_bert_bfd, prottrans_albert_bfd
+    "prottrans_albert_bfd"  # tested for: prottrans_bert_bfd, prottrans_albert_bfd
 )
 model, tokenizer, model_name = model_utils.get_model_tokenizer(model_name)
 model_task_out_dir, model_logits_out_dir = model_utils.create_output_directories(

@@ -178,3 +178,4 @@ models/cpt1_jagota/*
 models/jax_unirep/outputs/*
 models/tape_rao/cache/*
 models/tape_rao/outputs/*
+models/dbnsfp/outputs_dms/*

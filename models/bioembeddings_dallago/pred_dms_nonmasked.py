@@ -9,7 +9,7 @@ import pandas as pd
 
 import models.bioembeddings_dallago.model_utils as model_utils
 
-dms_filename = "PTEN_HUMAN_Matreyek_2021"
+dms_filename = "TPMT_HUMAN_Matreyek_2018" #"PTEN_HUMAN_Matreyek_2021"
 protid = dms_filename
 
 variants_df = pd.read_csv(f"data/dms/ProteinGym_substitutions/{protid}.csv", sep=",")
